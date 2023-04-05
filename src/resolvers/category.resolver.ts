@@ -1,8 +1,10 @@
+import type { GraphQLContext } from '../types/types'
+
 const CategoryResolvers = {
     resolvers: {
-        async getCategory(_, { id }, { isAuth, db }) {
+        async getCategory(_, { id }, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
-            
+
             const category = await db.category.findUnique({
                 where: {
                     id: id
@@ -15,7 +17,7 @@ const CategoryResolvers = {
                 return null
             }
         },
-        async getCategories(_, { }, { isAuth, db }) {
+        async getCategories(_, { }, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
             const categories = await db.category.findMany()
@@ -29,7 +31,7 @@ const CategoryResolvers = {
     },
 
     mutations: {
-        async createCategory(_, {input: {name}}, {isAuth, db}) {
+        async createCategory(_, {input: {name}}, {isAuth, db}: GraphQLContext) {
             if (!isAuth) return null
 
             const category = await db.category.create({

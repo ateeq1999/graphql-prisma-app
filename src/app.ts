@@ -6,7 +6,7 @@ import path = require('path');
 import resolvers from './resolvers';
 import typeDefs from './types';
 
-interface ContextValue {
+export type ContextValue = {
     db: PrismaClient
     isAuth: Boolean
 }
