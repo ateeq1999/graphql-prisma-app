@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
-    "start": "ts-node-dev --no-notify --respawn --transpile-only src/app.ts"
+    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/app.ts"
   },
   "keywords": [],
   "author": "",
