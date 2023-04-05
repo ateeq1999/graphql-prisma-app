@@ -1,44 +1,33 @@
 import { gql } from "apollo-server";
 import categoryType from "./category.type";
+import adminType from "./admin.type";
 
 const typeDefs = gql`
     scalar DateTime
 
+    ${adminType.type}
     ${categoryType.type}
 
+    ${adminType.input}
     ${categoryType.input}
 
-    # interface TokenType{
-    #     token: String
-    #     key: String
-    # }
-
-    # type AuthUser{
-    #     id: String
-    #     phone: String
-    #     password: String
-    #     createdAt: String
-    #     updatedAt: String
-    # }
-
-    # interface VerifyTokenType{
-    #     user: AuthUser
-    #     isLoggedIn: Boolean
-    # }
-
-    # type AuthResponse {
-    #     token: String
-    #     user: User
-    # }
-
     type Query {
-        # me: User
+        ${adminType.queries}
         ${categoryType.queries}
     }
 
+    type ZodError {
+        code: String
+        maximum: Int
+        type: String
+        inclusive: Boolean
+        exact: Boolean
+        message: String
+        path: [String]
+    }
+
     type Mutation {
-        # login(input: userInput): AuthResponse
-        # register(input: userInput): AuthResponse
+        ${adminType.mutations}
         ${categoryType.mutations}
     }
 `

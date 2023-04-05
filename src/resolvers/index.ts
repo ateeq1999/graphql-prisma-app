@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { GraphQLScalarType, Kind } from 'graphql'
 import categoryResolver from './category.resolver';
+import AdminResolvers from "./admin.resolver";
 
 const dateScalar = new GraphQLScalarType({
   name: 'DateTime',
@@ -25,10 +26,12 @@ const resolvers = {
   DateTime: dateScalar,
 
   Query: {
+    ...AdminResolvers.resolvers,
     ...categoryResolver.resolvers,
   },
   
   Mutation: {
+    ...AdminResolvers.mutations,
     ...categoryResolver.mutations,
   }
 }

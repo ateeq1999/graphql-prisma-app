@@ -6,11 +6,6 @@ import path = require('path');
 import resolvers from './resolvers';
 import typeDefs from './types';
 
-export type ContextValue = {
-    db: PrismaClient
-    isAuth: Boolean
-}
-
 const prisma = new PrismaClient()
 
 const plugins = [
@@ -22,10 +17,10 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     csrfPrevention: true,
-    context: async ({ req }): Promise<ContextValue> => {
+    context: async ({ req }) => {
         const token = req.headers.token as string || '';
 
-        let isLoggedIn = false
+        let isLoggedIn = true
 
         return { db: prisma as PrismaClient, isAuth: isLoggedIn as Boolean };
     },
