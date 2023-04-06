@@ -86,6 +86,7 @@ model User {
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./implicit-many-to-many"
 }
 
 generator typegraphql {

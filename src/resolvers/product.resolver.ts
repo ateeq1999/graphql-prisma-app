@@ -94,6 +94,23 @@ const ProductResolvers = {
                 }
             })
 
+            for (let index = 0; index < ids.length; index++) {
+                await db.categoriesOnProducts.create({
+                    data: {
+                        category: {
+                            connect: {
+                                id: ids[index]
+                            }
+                        },
+                        product: {
+                            connect: {
+                                id: product.id
+                            }
+                        }
+                    }
+                })
+            }
+
             return product
         },
         async updateProduct(_, { id,

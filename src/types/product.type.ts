@@ -27,7 +27,7 @@ const queries = `
 
 const mutations = `
     create${singlurName}(input: ${typeName}Input): ${singlurName}
-    create${singlurName}WithCategories(id: ID!, input: ${typeName}Input, ids: [String]): ${singlurName}
+    create${singlurName}WithCategories(input: ${typeName}Input, ids: [String]): ${singlurName}
     update${singlurName}(id: ID!, input: ${typeName}Input): ${singlurName}
 `
 
