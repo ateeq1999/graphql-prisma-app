@@ -22,39 +22,35 @@ model Company {
 }
 
 model Product {
-  id                   String                 @id @default(cuid())
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  name_ar              String
-  name_en              String
-  secintefic_name      String
-  active_material      String?
-  trade_name           String?
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name_ar         String
+  name_en         String
+  secintefic_name String
+  active_material String?
+  trade_name      String?
   // units           Unit       @default(Bills)
-  units                String?
-  price                Int
-  quantity             Int
-  categories           Category[]
-  orders               Order[]
-  CategoriesOnProducts CategoriesOnProducts[]
+  units           String?
+  price           Int
+  quantity        Int
+  orders          Order[]
+  categories      ProductCategory[]
 }
 
 model Category {
-  id                   String                 @id @default(cuid())
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  name                 String
-  products             Product[]
-  ProductsOnCategories CategoriesOnProducts[]
+  id        String            @id @default(cuid())
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  name      String
+  products  ProductCategory[]
 }
 
-model CategoriesOnProducts {
+model ProductCategory {
   product    Product  @relation(fields: [productId], references: [id])
   productId  String // relation scalar field (used in the `@relation` attribute above)
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String // relation scalar field (used in the `@relation` attribute above)
-  assignedAt DateTime @default(now())
-  // assignedBy String
 
   @@id([productId, categoryId])
 }
@@ -86,7 +82,7 @@ model User {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./outDir"
+  // output   = "./outDir"
 }
 
 generator typegraphql {

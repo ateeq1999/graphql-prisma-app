@@ -1,8 +1,30 @@
-import type { GraphQLContext } from '../types/types'
+import type { CreateProductArgs, CreateProductInput, CreateProductWithIdsArgs, GraphQLContext, ProductValidationResponse, UpdateProductArgs, UpdateProductWithIdsArgs } from '../types/types'
+import * as z from "zod"
+
+const productSchema = z.object({
+  name_ar: z.string().max(20),
+  name_en: z.string().max(20),
+  secintefic_name: z.string().max(20),
+  active_material: z.string().max(20),
+  trade_name: z.string().max(20),
+  units: z.string().max(20),
+  quantity: z.number(),
+  price: z.number(),
+})
+
+async function validate(input: CreateProductInput): Promise<ProductValidationResponse> {
+    const data = productSchema.safeParse(input)
+
+    if (data.success != true) {
+        return { issues: data.error.issues, data: null }
+    }
+
+    return { issues: [], data: data.data }
+}
 
 const ProductResolvers = {
     resolvers: {
-        async getProduct(_, { id }, { isAuth, db }: GraphQLContext) {
+        async getProduct(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
             const product = await db.product.findUnique({
@@ -17,7 +39,7 @@ const ProductResolvers = {
                 return null
             }
         },
-        async getProducts(_, { }, { isAuth, db }: GraphQLContext) {
+        async getProducts(_: any, { }, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
             const products = await db.product.findMany()
@@ -31,119 +53,111 @@ const ProductResolvers = {
     },
 
     mutations: {
-        async createProduct(_,
-            {
-                input: {
-                    name_ar,
-                    name_en,
-                    secintefic_name,
-                    active_material,
-                    trade_name,
-                    units,
-                    quantity,
-                    price
-                }
-            },
-            { isAuth, db }: GraphQLContext
-        ) {
+        async createProduct(_: any, args: CreateProductArgs,{ isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
-            const product = await db.product.create({
-                data: {
-                    name_ar,
-                    name_en,
-                    secintefic_name,
-                    active_material,
-                    trade_name,
-                    units,
-                    quantity,
-                    price
-                }
-            })
+            const input = await validate(args.input)
 
-            return product
+            if (input.data != null) {
+                const product = await db.product.create({
+                    data: input.data
+                })
+    
+                return product
+            } else {
+                return input.issues
+            }
         },
-        async createProductWithCategories(_,
-            {
-                input: {
-                    name_ar,
-                    name_en,
-                    secintefic_name,
-                    active_material,
-                    trade_name,
-                    units,
-                    quantity,
-                    price
-                },
-                ids
-            },
-            { isAuth, db }: GraphQLContext
-        ) {
+        async createProductWithCategories(_: any, args: CreateProductWithIdsArgs,{ isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
-            const product = await db.product.create({
-                data: {
-                    name_ar,
-                    name_en,
-                    secintefic_name,
-                    active_material,
-                    trade_name,
-                    units,
-                    quantity,
-                    price
-                }
-            })
+            const input = await validate(args.input)
 
-            for (let index = 0; index < ids.length; index++) {
-                await db.categoriesOnProducts.create({
-                    data: {
-                        category: {
-                            connect: {
-                                id: ids[index]
-                            }
-                        },
-                        product: {
-                            connect: {
-                                id: product.id
+            if (input.data != null) { 
+                const product = await db.product.create({
+                    data: input.data
+                })
+
+                // const ids = args.ids.map(id => {
+                //     return {
+                //         id: id
+                //     }
+                // })
+    
+                for (let index = 0; index < args.ids.length; index++) {
+                    await db.productCategory.create({
+                        data: {
+                            category: {
+                                connect: {
+                                    id: args.ids[index]
+                                }
+                            },
+                            product: {
+                                connect: {
+                                    id: product.id
+                                }
                             }
                         }
-                    }
-                })
+                    })
+                }
+    
+                return product
+            } else {
+                return input.issues
             }
-
-            return product
         },
-        async updateProduct(_, { id,
-            input: {
-                name_ar,
-                name_en,
-                secintefic_name,
-                active_material,
-                trade_name,
-                units,
-                quantity,
-                price
-            }
-        }, { isAuth, db }: GraphQLContext) {
+        async updateProduct(_: any, args: UpdateProductArgs, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
-            const product = await db.product.update({
-                where: {
-                    id: id
-                },
-                data: {
-                    name_ar,
-                    name_en,
-                    secintefic_name,
-                    active_material,
-                    trade_name,
-                    units,
-                    quantity,
-                    price
-                }
-            })
+            const input = await validate(args.input)
 
-            return product
+            if (input.data != null) {
+                const product = await db.product.update({
+                    where: {
+                        id: args.id
+                    },
+                    data: input.data
+                })
+    
+                return product
+            } else {
+                return input.issues
+            }
+        },
+        async updateProductWithCategories(_: any, args: UpdateProductWithIdsArgs, { isAuth, db }: GraphQLContext) {
+            if (!isAuth) return null
+
+            const input = await validate(args.input)
+
+            if (input.data != null) {
+                const product = await db.product.update({
+                    where: {
+                        id: args.id
+                    },
+                    data: input.data
+                })
+
+                for (let index = 0; index < args.ids.length; index++) {
+                    await db.productCategory.create({
+                        data: {
+                            category: {
+                                connect: {
+                                    id: args.ids[index]
+                                }
+                            },
+                            product: {
+                                connect: {
+                                    id: product.id
+                                }
+                            }
+                        }
+                    })
+                }
+    
+                return product
+            } else {
+                return input.issues
+            }
         }
     }
 }

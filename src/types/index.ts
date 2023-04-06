@@ -2,10 +2,12 @@ import { gql } from "apollo-server";
 import categoryType from "./category.type";
 import adminType from "./admin.type";
 import productType from "./product.type";
+import unionType from "./union.type";
 
 const typeDefs = gql`
     scalar DateTime
 
+    ${unionType.type}
     ${adminType.type}
     ${categoryType.type}
     ${productType.type}

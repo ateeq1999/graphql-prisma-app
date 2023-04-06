@@ -26,6 +26,39 @@ const dateScalar = new GraphQLScalarType({
 const resolvers = {
   DateTime: dateScalar,
 
+  CreateCategoryResponse: {
+    __resolveType(obj: any) {
+
+      const size = Object.keys(obj).length
+
+      if (size === 4) {
+        return "Category"
+      }
+
+      if (size != 4) {
+        return "ValidationError"
+      }
+
+      return null; // GraphQLError is thrown
+    },
+  },
+  CreateProductResponse: {
+    __resolveType(obj: any) {
+
+      const size = Object.keys(obj).length
+
+      if (size === 11) {
+        return "Product"
+      }
+
+      if (size != 11) {
+        return "ValidationError"
+      }
+
+      return null; // GraphQLError is thrown
+    },
+  },
+
   Query: {
     ...AdminResolvers.resolvers,
     ...categoryResolver.resolvers,

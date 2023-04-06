@@ -7,7 +7,7 @@ const attrs = `
 `
 
 const relations = `
-
+    products: [Product]
 `
 
 const queries = `
@@ -16,8 +16,8 @@ const queries = `
 `
 
 const mutations = `
-    create${singlurName}(input: ${typeName}Input): ${singlurName}
-    update${singlurName}(id: ID!, input: ${typeName}Input): ${singlurName}
+    create${singlurName}(input: ${typeName}Input): CreateCategoryResponse
+    update${singlurName}(id: ID!, input: ${typeName}Input): CreateCategoryResponse
 `
 
 const type = `

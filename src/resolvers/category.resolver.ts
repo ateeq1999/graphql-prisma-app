@@ -1,8 +1,23 @@
-import type { GraphQLContext } from '../types/types'
+import * as z from "zod"
+import type { CreateCategoryArgs, CreateCategoryInput, CategoryValidationResponse, GraphQLContext, UpdateCategoryArgs } from '../types/types'
+
+const CategorySchema = z.object({
+  name: z.string().max(20),
+})
+
+async function validate(input: CreateCategoryInput): Promise<CategoryValidationResponse> {
+    const data = CategorySchema.safeParse(input)
+
+    if (data.success != true) {
+        return { issues: data.error.issues, data: null }
+    }
+
+    return { issues: [], data: data.data }
+}
 
 const CategoryResolvers = {
     resolvers: {
-        async getCategory(_, { id }, { isAuth, db }: GraphQLContext) {
+        async getCategory(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
             const category = await db.category.findUnique({
@@ -17,10 +32,15 @@ const CategoryResolvers = {
                 return null
             }
         },
-        async getCategories(_, { }, { isAuth, db }: GraphQLContext) {
+        async getCategories(_: any, { }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
-            const categories = await db.category.findMany()
+            const categories = await db.category.findMany({
+                include: {
+                    products: true,
+                },
+                
+            })
 
             if(categories != null){
                 return categories
@@ -31,30 +51,42 @@ const CategoryResolvers = {
     },
 
     mutations: {
-        async createCategory(_, {input: {name}}, {isAuth, db}: GraphQLContext) {
+        async createCategory(_: any, args: CreateCategoryArgs, {isAuth, db}: GraphQLContext) {
             if (!isAuth) return null
 
-            const category = await db.category.create({
-                data: {
-                    name: name
-                }
-            })
+            const input = await validate(args.input)
 
-            return category
+            if (input.data != null) {
+                const category = await db.category.create({
+                    data: {
+                        name: input.data.name
+                    }
+                })
+    
+                return category
+            } else {
+                return { issues: input.issues }
+            }
         },
-        async updateCategory(_, { id, input: {name}}, {isAuth, db}: GraphQLContext) {
+        async updateCategory(_: any, args: UpdateCategoryArgs, {isAuth, db}: GraphQLContext) {
             if (!isAuth) return null
 
-            const category = await db.category.update({
-                where: {
-                    id: id
-                },
-                data: {
-                    name: name
-                }
-            })
+            const input = await validate(args.input)
 
-            return category
+            if (input.data != null) {
+                const category = await db.category.update({
+                    where: {
+                        id: args.id
+                    },
+                    data: {
+                        name: input.data.name
+                    }
+                })
+    
+                return category
+            } else {
+                return { issues: input.issues }
+            }
         }
     }
 }

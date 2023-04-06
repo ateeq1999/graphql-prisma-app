@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from './prisma/outDir'
 import { ApolloServer } from 'apollo-server';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import path = require('path');
