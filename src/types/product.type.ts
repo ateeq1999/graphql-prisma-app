@@ -1,10 +1,20 @@
-const typeName = 'category'
-const singlurName = "Category"
-const pluralName = "Categories"
+const typeName = 'product'
+const singlurName = "Product"
+const pluralName = "Products"
 
 const attrs = `
-  name: String!
+  name_ar:         String
+  name_en:         String
+  secintefic_name: String
+  active_material: String
+  trade_name:      String
+  units:           String
+  price:           Int
+  quantity:        Int
 `
+
+//   categories      [Category]
+//   orders          [Order]
 
 const relations = `
 
@@ -17,6 +27,7 @@ const queries = `
 
 const mutations = `
     create${singlurName}(input: ${typeName}Input): ${singlurName}
+    create${singlurName}WithCategories(id: ID!, input: ${typeName}Input, ids: [String]): ${singlurName}
     update${singlurName}(id: ID!, input: ${typeName}Input): ${singlurName}
 `
 

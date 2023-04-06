@@ -41,6 +41,20 @@ const CategoryResolvers = {
             })
 
             return category
+        },
+        async updateCategory(_, { id, input: {name}}, {isAuth, db}: GraphQLContext) {
+            if (!isAuth) return null
+
+            const category = await db.category.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    name: name
+                }
+            })
+
+            return category
         }
     }
 }

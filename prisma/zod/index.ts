@@ -1,5 +1,7 @@
 export * from "./admin"
+export * from "./company"
 export * from "./product"
 export * from "./category"
+export * from "./categoriesonproducts"
 export * from "./order"
 export * from "./user"

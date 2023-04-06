@@ -1,7 +1,7 @@
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
-  // relationmode = "prisma"
+  // relationMode = "prisma"
 }
 
 model Admin {
@@ -12,24 +12,51 @@ model Admin {
   password  String
 }
 
+model Company {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  logo      String
+  desc      String
+}
+
 model Product {
-  id          String     @id @default(cuid())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  name        String
-  sku         String     @unique
-  description String?
-  quantity    Int
-  categories  Category[]
-  orders      Order[]
+  id                   String                 @id @default(cuid())
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  name_ar              String
+  name_en              String
+  secintefic_name      String
+  active_material      String?
+  trade_name           String?
+  // units           Unit       @default(Bills)
+  units                String?
+  price                Int
+  quantity             Int
+  categories           Category[]
+  orders               Order[]
+  CategoriesOnProducts CategoriesOnProducts[]
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  name      String
-  products  Product[]
+  id                   String                 @id @default(cuid())
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  name                 String
+  products             Product[]
+  ProductsOnCategories CategoriesOnProducts[]
+}
+
+model CategoriesOnProducts {
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String // relation scalar field (used in the `@relation` attribute above)
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String // relation scalar field (used in the `@relation` attribute above)
+  assignedAt DateTime @default(now())
+  // assignedBy String
+
+  @@id([productId, categoryId])
 }
 
 model Order {
@@ -51,6 +78,11 @@ model User {
   address   String?
   orders    Order[]
 }
+
+// enum Unit {
+//   Bills
+//   Caps
+// }
 
 generator client {
   provider = "prisma-client-js"
@@ -76,7 +108,7 @@ generator zod {
   // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
   useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
 
-  imports = null // (default) will import the referenced file in generated schemas to be used via imports.someExportedVariable
+  // imports = null // (default) will import the referenced file in generated schemas to be used via imports.someExportedVariable
 
   // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
   prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
