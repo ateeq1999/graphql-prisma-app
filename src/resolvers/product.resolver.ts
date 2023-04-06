@@ -42,7 +42,13 @@ const ProductResolvers = {
         async getProducts(_: any, { }, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
-            const products = await db.product.findMany()
+            const products = await db.product.findMany({
+                include: {
+                    categories: true
+                },
+                skip: 0,
+                take: 20
+            })
 
             if(products != null){
                 return products
@@ -73,34 +79,23 @@ const ProductResolvers = {
 
             const input = await validate(args.input)
 
-            if (input.data != null) { 
-                const product = await db.product.create({
-                    data: input.data
+            if (input.data != null) {
+
+                const ids = args.ids.map(id => {
+                    return {
+                        id: id
+                    }
                 })
 
-                // const ids = args.ids.map(id => {
-                //     return {
-                //         id: id
-                //     }
-                // })
-    
-                for (let index = 0; index < args.ids.length; index++) {
-                    await db.productCategory.create({
-                        data: {
-                            category: {
-                                connect: {
-                                    id: args.ids[index]
-                                }
-                            },
-                            product: {
-                                connect: {
-                                    id: product.id
-                                }
-                            }
+                const product = await db.product.create({
+                    data: {
+                        ...input.data,
+                        categories: {
+                            connect: ids
                         }
-                    })
-                }
-    
+                    }
+                })
+
                 return product
             } else {
                 return input.issues
@@ -130,29 +125,23 @@ const ProductResolvers = {
             const input = await validate(args.input)
 
             if (input.data != null) {
+                const ids = args.ids.map(id => {
+                    return {
+                        id: id
+                    }
+                })
+
                 const product = await db.product.update({
                     where: {
                         id: args.id
                     },
-                    data: input.data
-                })
-
-                for (let index = 0; index < args.ids.length; index++) {
-                    await db.productCategory.create({
-                        data: {
-                            category: {
-                                connect: {
-                                    id: args.ids[index]
-                                }
-                            },
-                            product: {
-                                connect: {
-                                    id: product.id
-                                }
-                            }
+                    data: {
+                        ...input.data,
+                        categories: {
+                            connect: ids
                         }
-                    })
-                }
+                    }
+                })
     
                 return product
             } else {
