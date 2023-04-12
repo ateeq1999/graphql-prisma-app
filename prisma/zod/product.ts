@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { Unit, ProductType } from "@prisma/client"
 import { CompleteOrder, RelatedOrderModel, CompleteCategory, RelatedCategoryModel } from "./index"
 
 export const ProductModel = z.object({
@@ -10,8 +11,9 @@ export const ProductModel = z.object({
   secintefic_name: z.string(),
   active_material: z.string().nullish(),
   trade_name: z.string().nullish(),
-  units: z.string().nullish(),
-  price: z.number().int(),
+  unit: z.nativeEnum(Unit),
+  type: z.nativeEnum(ProductType),
+  price: z.number(),
   quantity: z.number().int(),
 })
 

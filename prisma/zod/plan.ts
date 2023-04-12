@@ -1,24 +1,24 @@
 import * as z from "zod"
 import { CompleteCustomer, RelatedCustomerModel } from "./index"
 
-export const CompanyModel = z.object({
+export const PlanModel = z.object({
   id: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
   name: z.string(),
   desc: z.string().nullish(),
-  logo: z.string().nullish(),
+  price: z.number(),
 })
 
-export interface CompleteCompany extends z.infer<typeof CompanyModel> {
+export interface CompletePlan extends z.infer<typeof PlanModel> {
   customer: CompleteCustomer[]
 }
 
 /**
- * RelatedCompanyModel contains all relations on your model in addition to the scalars
+ * RelatedPlanModel contains all relations on your model in addition to the scalars
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedCompanyModel: z.ZodSchema<CompleteCompany> = z.lazy(() => CompanyModel.extend({
+export const RelatedPlanModel: z.ZodSchema<CompletePlan> = z.lazy(() => PlanModel.extend({
   customer: RelatedCustomerModel.array(),
 }))

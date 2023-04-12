@@ -13,26 +13,27 @@ model Admin {
 }
 
 model Company {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @unique
-  logo      String
-  desc      String
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String     @unique
+  desc      String? // @db.VarChar(255)
+  logo      String?
+  customer  Customer[]
 }
 
 model Product {
-  id              String     @id @default(cuid())
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
   name_ar         String
   name_en         String
   secintefic_name String
   active_material String?
   trade_name      String?
-  // units           Unit       @default(Bills)
-  units           String?
-  price           Int
+  unit            Unit        @default(MILLIGRAM)
+  type            ProductType @default(CAPSULES)
+  price           Float
   quantity        Int
   orders          Order[]
   categories      Category[]
@@ -46,39 +47,56 @@ model Category {
   products  Product[]
 }
 
-// model ProductCategory {
-//   product    Product  @relation(fields: [productId], references: [id])
-//   productId  String // relation scalar field (used in the `@relation` attribute above)
-//   category   Category @relation(fields: [categoryId], references: [id])
-//   categoryId String // relation scalar field (used in the `@relation` attribute above)
-
-//   @@id([productId, categoryId])
-// }
-
 model Order {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  userId    String?
-  customer  User?     @relation(fields: [userId], references: [id])
-  products  Product[]
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  products   Product[]
 }
 
-model User {
+model Customer {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   email     String   @unique
-  firstName String?
-  lastName  String?
-  address   String?
+  phone     String   @unique
+  name      String
   orders    Order[]
+  planId    String?
+  plan      Plan?    @relation(fields: [planId], references: [id])
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
 }
 
-// enum Unit {
-//   Bills
-//   Caps
-// }
+model Plan {
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String     @unique
+  desc      String?
+  price     Float
+  customer  Customer[]
+}
+
+enum ProductType {
+  LIQUID
+  TABLET
+  CAPSULES
+}
+
+enum Unit {
+  KILOGRAM
+  GRAM
+  MILLIGRAM
+  MICROGRAM
+  LITER
+  MILLILITER
+  CUBICCENTIMETRE
+  MOLE
+  MILLIMOLE
+}
 
 generator client {
   provider = "prisma-client-js"
