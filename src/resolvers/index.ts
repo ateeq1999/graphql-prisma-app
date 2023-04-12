@@ -3,6 +3,7 @@ import { GraphQLScalarType, Kind } from 'graphql'
 import categoryResolver from './category.resolver';
 import AdminResolvers from "./admin.resolver";
 import ProductResolvers from "./product.resolver";
+import PlanResolvers from "./plan.resolver";
 
 const dateScalar = new GraphQLScalarType({
   name: 'DateTime',
@@ -47,11 +48,45 @@ const resolvers = {
 
       const size = Object.keys(obj).length
 
-      if (size === 11) {
+      if (size === 12) {
         return "Product"
       }
 
-      if (size != 11) {
+      if (size != 12) {
+        return "ValidationError"
+      }
+
+      return null; // GraphQLError is thrown
+    },
+  },
+
+  CreatePlanResponse: {
+    __resolveType(obj: any) {
+
+      const size = Object.keys(obj).length
+
+      if (size === 6) {
+        return "Plan"
+      }
+
+      if (size != 6) {
+        return "ValidationError"
+      }
+
+      return null; // GraphQLError is thrown
+    },
+  },
+
+  CreateAdminResponse: {
+    __resolveType(obj: any) {
+
+      const size = Object.keys(obj).length
+
+      if (size === 4) {
+        return "Admin"
+      }
+
+      if (size != 4) {
         return "ValidationError"
       }
 
@@ -63,12 +98,14 @@ const resolvers = {
     ...AdminResolvers.resolvers,
     ...categoryResolver.resolvers,
     ...ProductResolvers.resolvers,
+    ...PlanResolvers.resolvers,
   },
   
   Mutation: {
     ...AdminResolvers.mutations,
     ...categoryResolver.mutations,
     ...ProductResolvers.mutations,
+    ...PlanResolvers.mutations,
   }
 }
 

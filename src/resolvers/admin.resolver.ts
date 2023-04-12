@@ -1,9 +1,24 @@
-import { AdminValidator } from '../../prisma/zod'
-import type { GraphQLContext } from '../types/types'
+import * as z from "zod"
+import type { AdminValidationResponse, CreateAdminArgs, CreateAdminInput, GraphQLContext, UpdateAdminArgs } from '../types/types'
+
+const AdminSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+})
+
+async function validate(input: CreateAdminInput): Promise<AdminValidationResponse> {
+    const data = AdminSchema.safeParse(input)
+
+    if (data.success != true) {
+        return { issues: data.error.issues, data: null }
+    }
+
+    return { issues: [], data: data.data }
+}
 
 const AdminResolvers = {
     resolvers: {
-        async getAdmin(_, { id }, { isAuth, db }: GraphQLContext) {
+        async getAdmin(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
             const admin = await db.admin.findUnique({
@@ -18,7 +33,7 @@ const AdminResolvers = {
                 return null
             }
         },
-        async getAdmins(_, { }, { isAuth, db }: GraphQLContext) {
+        async getAdmins(_: any, { }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
 
             const admins = await db.admin.findMany()
@@ -32,38 +47,44 @@ const AdminResolvers = {
     },
 
     mutations: {
-        async createAdmin(_, { input }, { isAuth, db }: GraphQLContext) {
+        async createAdmin(_: any, args: CreateAdminArgs, {isAuth, db}: GraphQLContext) {
             if (!isAuth) return null
 
-            const validatedData = AdminValidator.safeParse(input)
+            const input = await validate(args.input)
 
-            if (validatedData.success != true) {
-                return  { data: null, msg: "Failure", error: validatedData.error.errors }
+            if (input.data != null) {
+                const admin = await db.admin.create({
+                    data: {
+                        email: input.data.email,
+                        password: input.data.password
+                    }
+                })
+    
+                return admin
+            } else {
+                return { issues: input.issues }
             }
-
-            const admin = await db.admin.create({
-                data: {
-                    email: validatedData.data.email,
-                    password: validatedData.data.password
-                }
-            })
-
-            return { data: admin, msg: "Success", error: null }
         },
-        async updateAdmin(_, {id, input: {email, password}}, {isAuth, db}: GraphQLContext) {
+        async updateCategory(_: any, args: UpdateAdminArgs, {isAuth, db}: GraphQLContext) {
             if (!isAuth) return null
 
-            const admin = await db.admin.update({
-                where: {
-                    id
-                },
-                data: {
-                    email,
-                    password
-                }
-            })
+            const input = await validate(args.input)
 
-            return admin
+            if (input.data != null) {
+                const admin = await db.admin.update({
+                    where: {
+                        id: args.id
+                    },
+                    data: {
+                        email: input.data.email,
+                        password: input.data.password
+                    }
+                })
+    
+                return admin
+            } else {
+                return { issues: input.issues }
+            }
         }
     }
 }

@@ -2,6 +2,8 @@
 const type = `
   union CreateCategoryResponse = Category | ValidationError
   union CreateProductResponse = Product | ValidationError
+  union CreateAdminResponse = Admin | ValidationError
+  union CreatePlanResponse = Plan | ValidationError
 
   type Issue {
     code: String

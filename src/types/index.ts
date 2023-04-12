@@ -3,6 +3,7 @@ import categoryType from "./category.type";
 import adminType from "./admin.type";
 import productType from "./product.type";
 import unionType from "./union.type";
+import planType from "./plan.type";
 
 const typeDefs = gql`
     scalar DateTime
@@ -11,21 +12,25 @@ const typeDefs = gql`
     ${adminType.type}
     ${categoryType.type}
     ${productType.type}
+    ${planType.type}
 
     ${adminType.input}
     ${categoryType.input}
     ${productType.input}
+    ${planType.input}
 
     type Query {
         ${adminType.queries}
         ${categoryType.queries}
         ${productType.queries}
+        ${planType.queries}
     }
 
     type Mutation {
         ${adminType.mutations}
         ${categoryType.mutations}
         ${productType.mutations}
+        ${planType.mutations}
     }
 
     type ZodError {

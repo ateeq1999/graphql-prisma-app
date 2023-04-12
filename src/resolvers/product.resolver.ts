@@ -1,3 +1,4 @@
+import { ProductType, Unit } from '@prisma/client'
 import type { CreateProductArgs, CreateProductInput, CreateProductWithIdsArgs, GraphQLContext, ProductValidationResponse, UpdateProductArgs, UpdateProductWithIdsArgs } from '../types/types'
 import * as z from "zod"
 
@@ -7,7 +8,8 @@ const productSchema = z.object({
   secintefic_name: z.string().max(20),
   active_material: z.string().max(20),
   trade_name: z.string().max(20),
-  units: z.string().max(20),
+  unit: z.nativeEnum(Unit),
+  type: z.nativeEnum(ProductType),
   quantity: z.number(),
   price: z.number(),
 })

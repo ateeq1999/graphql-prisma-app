@@ -16,8 +16,8 @@ const queries = `
 `
 
 const mutations = `
-    create${singlurName}(input: ${typeName}Input): CreateCategoryResponse
-    update${singlurName}(id: ID!, input: ${typeName}Input): CreateCategoryResponse
+    create${singlurName}(input: ${typeName}Input): Create${singlurName}Response
+    update${singlurName}(id: ID!, input: ${typeName}Input): Create${singlurName}Response
 `
 
 const type = `
@@ -35,11 +35,6 @@ const input = `
         ${attrs}
     }
 
-    type ${pluralName}Response {
-        error: Int
-        msg: String
-        data: [${singlurName}]
-    }
 `
 
 export default {

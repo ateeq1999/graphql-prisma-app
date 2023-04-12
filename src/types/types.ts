@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, ProductType, Unit } from '@prisma/client'
  
 const prisma = new PrismaClient()
  
@@ -46,13 +46,33 @@ export type UpdateCategoryArgs = {
     input: CreateCategoryInput
 }
 
+export type CreateAdminInput = {
+    email: string
+    password: string
+}
+
+export type AdminValidationResponse = {
+    data: CreateAdminInput | null
+    issues: Array<any>
+}
+
+export type CreateAdminArgs = {
+    input: CreateAdminInput
+}
+
+export type UpdateAdminArgs = {
+    id: string
+    input: CreateAdminInput
+}
+
 export type CreateProductInput = {
     name_ar: string
     name_en: string
     secintefic_name: string
     active_material: string
     trade_name: string
-    units: string
+    unit: Unit
+    type: ProductType
     quantity: number
     price: number
 }
@@ -80,4 +100,24 @@ export type UpdateProductWithIdsArgs = {
     id: string
     input: CreateProductInput
     ids: Array<string>
+}
+
+export type CreatePlanInput = {
+    name: string
+    price: number
+    desc: string | null
+}
+
+export type PlanValidationResponse = {
+    data: CreatePlanInput | null
+    issues: Array<any>
+}
+
+export type CreatePlanArgs = {
+    input: CreatePlanInput
+}
+
+export type UpdatePlanArgs = {
+    id: string
+    input: CreatePlanInput
 }

@@ -8,9 +8,10 @@ const attrs = `
     secintefic_name: String
     active_material: String
     trade_name:      String
-    units:           String
-    price:           Int
-    quantity:        Int
+    unit:            Unit
+    type:            ProductType
+    price:           Float
+    quantity:        Float
 `
 
 
@@ -25,10 +26,10 @@ const queries = `
 `
 
 const mutations = `
-    create${singlurName}(input: ${typeName}Input): CreateProductResponse
-    create${singlurName}WithCategories(input: ${typeName}Input, ids: [String]): CreateProductResponse
-    update${singlurName}(id: ID!, input: ${typeName}Input): CreateProductResponse
-    update${singlurName}WithCategories(id: ID!, input: ${typeName}Input, ids: [String]): CreateProductResponse
+    create${singlurName}(input: ${typeName}Input): Create${singlurName}Response
+    create${singlurName}WithCategories(input: ${typeName}Input, ids: [String]): Create${singlurName}Response
+    update${singlurName}(id: ID!, input: ${typeName}Input): Create${singlurName}Response
+    update${singlurName}WithCategories(id: ID!, input: ${typeName}Input, ids: [String]): Create${singlurName}Response
 `
 
 const type = `
@@ -46,10 +47,22 @@ const input = `
         ${attrs}
     }
 
-    type ${pluralName}Response {
-        error: Int
-        msg: String
-        data: [${singlurName}]
+    enum ProductType {
+        LIQUID
+        TABLET
+        CAPSULES
+    }
+
+    enum Unit {
+        KILOGRAM
+        GRAM
+        MILLIGRAM
+        MICROGRAM
+        LITER
+        MILLILITER
+        CUBICCENTIMETRE
+        MOLE
+        MILLIMOLE
     }
 `
 

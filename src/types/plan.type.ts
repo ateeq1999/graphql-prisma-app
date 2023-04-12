@@ -1,10 +1,11 @@
-const typeName = 'admin'
-const singlurName = "Admin"
-const pluralName = "Admins"
+const typeName = 'plan'
+const singlurName = "Plan"
+const pluralName = "Plans"
 
 const attrs = `
-  email: String!
-  password: String!
+  name: String!
+  price: Float!
+  desc: String
 `
 
 const relations = `
