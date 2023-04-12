@@ -1,5 +1,6 @@
 import * as z from "zod"
 import type { AdminValidationResponse, CreateAdminArgs, CreateAdminInput, GraphQLContext, UpdateAdminArgs } from '../types/types'
+import { hashPassword } from "../services/Auth"
 
 const AdminSchema = z.object({
   email: z.string().email(),
@@ -56,7 +57,7 @@ const AdminResolvers = {
                 const admin = await db.admin.create({
                     data: {
                         email: input.data.email,
-                        password: input.data.password
+                        password: hashPassword(input.data.password)
                     }
                 })
     
@@ -65,7 +66,7 @@ const AdminResolvers = {
                 return { issues: input.issues }
             }
         },
-        async updateCategory(_: any, args: UpdateAdminArgs, {isAuth, db}: GraphQLContext) {
+        async updateAdmin(_: any, args: UpdateAdminArgs, {isAuth, db}: GraphQLContext) {
             if (!isAuth) return null
 
             const input = await validate(args.input)
@@ -77,7 +78,26 @@ const AdminResolvers = {
                     },
                     data: {
                         email: input.data.email,
-                        password: input.data.password
+                        password: hashPassword(input.data.password)
+                    }
+                })
+    
+                return admin
+            } else {
+                return { issues: input.issues }
+            }
+        },
+
+        async registerAdmin(_: any, args: CreateAdminArgs, {isAuth, db}: GraphQLContext) {
+            if (!isAuth) return null
+
+            const input = await validate(args.input)
+
+            if (input.data != null) {
+                const admin = await db.admin.create({
+                    data: {
+                        email: input.data.email,
+                        password: hashPassword(input.data.password)
                     }
                 })
     

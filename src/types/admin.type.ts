@@ -17,6 +17,7 @@ const queries = `
 
 const mutations = `
     create${singlurName}(input: ${typeName}Input): Create${singlurName}Response
+    register${singlurName}(input: ${typeName}Input): Create${singlurName}Response
     update${singlurName}(id: ID!, input: ${typeName}Input): Create${singlurName}Response
 `
 
