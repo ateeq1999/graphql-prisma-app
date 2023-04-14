@@ -15,7 +15,7 @@ async function validate(input: CreateCategoryInput): Promise<CategoryValidationR
     return { issues: [], data: data.data }
 }
 
-const CategoryResolvers = {
+const CategoryResolver = {
     resolvers: {
         async getCategory(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
@@ -91,4 +91,4 @@ const CategoryResolvers = {
     }
 }
 
-export default CategoryResolvers
+export default CategoryResolver

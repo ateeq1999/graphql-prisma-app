@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
 // import { PrismaClient } from './prisma/outDir'
 import { ApolloServer } from 'apollo-server';
@@ -6,7 +5,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import path = require('path');
 import resolvers from './resolvers';
 import typeDefs from './types';
-import { authentication, random } from './services/Auth';
+// import { authentication, random } from './services/Auth';
 
 const prisma = new PrismaClient()
 

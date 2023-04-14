@@ -11,7 +11,7 @@ export const CompanyModel = z.object({
 })
 
 export interface CompleteCompany extends z.infer<typeof CompanyModel> {
-  customer: CompleteCustomer[]
+  customers: CompleteCustomer[]
 }
 
 /**
@@ -20,5 +20,5 @@ export interface CompleteCompany extends z.infer<typeof CompanyModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const RelatedCompanyModel: z.ZodSchema<CompleteCompany> = z.lazy(() => CompanyModel.extend({
-  customer: RelatedCustomerModel.array(),
+  customers: RelatedCustomerModel.array(),
 }))

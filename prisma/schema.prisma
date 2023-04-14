@@ -17,9 +17,9 @@ model Company {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   name      String     @unique
-  desc      String? // @db.VarChar(255)
+  desc      String? // @db.VarChar(255) 
   logo      String?
-  customer  Customer[]
+  customers Customer[]
 }
 
 model Product {
@@ -77,7 +77,7 @@ model Plan {
   name      String     @unique
   desc      String?
   price     Float
-  customer  Customer[]
+  customers Customer[]
 }
 
 enum ProductType {

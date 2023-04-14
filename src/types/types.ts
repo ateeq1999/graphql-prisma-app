@@ -121,3 +121,23 @@ export type UpdatePlanArgs = {
     id: string
     input: CreatePlanInput
 }
+
+export type CreateCompanyInput = {
+    name: string
+    desc: string | null
+    logo: string | null
+}
+
+export type CompanyValidationResponse = {
+    data: CreateCompanyInput | null
+    issues: Array<any>
+}
+
+export type CreateCompanyArgs = {
+    input: CreateCompanyInput
+}
+
+export type UpdateCompanyArgs = {
+    id: string
+    input: CreateCompanyInput
+}

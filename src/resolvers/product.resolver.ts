@@ -24,7 +24,7 @@ async function validate(input: CreateProductInput): Promise<ProductValidationRes
     return { issues: [], data: data.data }
 }
 
-const ProductResolvers = {
+const ProductResolver = {
     resolvers: {
         async getProduct(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
@@ -153,4 +153,4 @@ const ProductResolvers = {
     }
 }
 
-export default ProductResolvers
+export default ProductResolver

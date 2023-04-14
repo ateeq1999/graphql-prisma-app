@@ -11,7 +11,7 @@ export const PlanModel = z.object({
 })
 
 export interface CompletePlan extends z.infer<typeof PlanModel> {
-  customer: CompleteCustomer[]
+  customers: CompleteCustomer[]
 }
 
 /**
@@ -20,5 +20,5 @@ export interface CompletePlan extends z.infer<typeof PlanModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const RelatedPlanModel: z.ZodSchema<CompletePlan> = z.lazy(() => PlanModel.extend({
-  customer: RelatedCustomerModel.array(),
+  customers: RelatedCustomerModel.array(),
 }))

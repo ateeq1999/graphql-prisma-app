@@ -1,9 +1,10 @@
 import { DateTime } from "luxon";
 import { GraphQLScalarType, Kind } from 'graphql'
-import categoryResolver from './category.resolver';
-import AdminResolvers from "./admin.resolver";
-import ProductResolvers from "./product.resolver";
-import PlanResolvers from "./plan.resolver";
+import CategoryResolver from './category.resolver';
+import AdminResolver from "./admin.resolver";
+import ProductResolver from "./product.resolver";
+import PlanResolver from "./plan.resolver";
+import CompanyResolver from "./company.resolver";
 
 const dateScalar = new GraphQLScalarType({
   name: 'DateTime',
@@ -27,6 +28,23 @@ const dateScalar = new GraphQLScalarType({
 const resolvers = {
   DateTime: dateScalar,
 
+   CreateCompanyResponse: {
+      __resolveType(obj: any) {
+  
+        const size = Object.keys(obj).length
+  
+        if (size === 6) {
+          return "Company"
+        }
+  
+        if (size != 6) {
+          return "ValidationError"
+        }
+  
+        return null; // GraphQLError is thrown
+      },
+    },
+
   CreateCategoryResponse: {
     __resolveType(obj: any) {
 
@@ -43,6 +61,7 @@ const resolvers = {
       return null; // GraphQLError is thrown
     },
   },
+
   CreateProductResponse: {
     __resolveType(obj: any) {
 
@@ -94,18 +113,21 @@ const resolvers = {
     },
   },
 
+
   Query: {
-    ...AdminResolvers.resolvers,
-    ...categoryResolver.resolvers,
-    ...ProductResolvers.resolvers,
-    ...PlanResolvers.resolvers,
+    ...AdminResolver.resolvers,
+    ...CategoryResolver.resolvers,
+    ...ProductResolver.resolvers,
+    ...PlanResolver.resolvers,
+    ...CompanyResolver.resolvers,
   },
   
   Mutation: {
-    ...AdminResolvers.mutations,
-    ...categoryResolver.mutations,
-    ...ProductResolvers.mutations,
-    ...PlanResolvers.mutations,
+    ...AdminResolver.mutations,
+    ...CategoryResolver.mutations,
+    ...ProductResolver.mutations,
+    ...PlanResolver.mutations,
+    ...CompanyResolver.mutations,
   }
 }
 

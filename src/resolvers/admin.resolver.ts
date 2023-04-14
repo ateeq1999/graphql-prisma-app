@@ -17,7 +17,7 @@ async function validate(input: CreateAdminInput): Promise<AdminValidationRespons
     return { issues: [], data: data.data }
 }
 
-const AdminResolvers = {
+const AdminResolver = {
     resolvers: {
         async getAdmin(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
@@ -109,4 +109,4 @@ const AdminResolvers = {
     }
 }
 
-export default AdminResolvers
+export default AdminResolver

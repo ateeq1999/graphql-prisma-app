@@ -17,7 +17,7 @@ async function validate(input: CreatePlanInput): Promise<PlanValidationResponse>
     return { issues: [], data: data.data }
 }
 
-const PlanResolvers = {
+const PlanResolver = {
     resolvers: {
         async getPlan(_: any, { id }: any, { isAuth, db }: GraphQLContext) {
             if (!isAuth) return null
@@ -92,4 +92,4 @@ const PlanResolvers = {
     }
 }
 
-export default PlanResolvers
+export default PlanResolver
